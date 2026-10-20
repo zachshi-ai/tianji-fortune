@@ -299,6 +299,44 @@
   <div id="dailyList" class="space-y-2.5"></div>
 </main>
 
+
+<main id="tab-pair" class="hidden relative z-10 max-w-[430px] mx-auto px-4 pt-5 pb-28 space-y-5">
+  <div class="card-line rounded-2xl border border-[#cbb454]/30 bg-[#221c15]/75 p-5 up">
+    <h3 class="lg-han text-xl gold-text" data-i="pair_title">合婚合盘</h3>
+    <p class="text-[12px] text-[#aa9c80] mt-1 mb-4" data-i="pair_sub">两人各报生辰，看合力在哪里、卡点在哪里。</p>
+
+    <div class="rounded-xl border border-[#cbb454]/25 bg-[#141009]/40 p-3.5 mb-3">
+      <p class="text-[11px] text-[#e8a8a0] mb-2.5" data-i="pair_a">甲方</p>
+      <div class="flex gap-2 mb-2">
+        <input id="pNameA" type="text" class="flex-1 h-10 px-3 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-sm" />
+        <select id="pSexA" class="w-24 h-10 px-1 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-xs"><option value="male">♂</option><option value="female">♀</option></select>
+      </div>
+      <div class="flex gap-2">
+        <input id="pDateA" type="date" class="flex-1 h-10 px-3 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-xs" />
+        <select id="pTimeA" class="w-24 h-10 px-1 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-xs"></select>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-[#cbb454]/25 bg-[#141009]/40 p-3.5 mb-4">
+      <p class="text-[11px] text-[#9dbaa4] mb-2.5" data-i="pair_b">乙方</p>
+      <div class="flex gap-2 mb-2">
+        <input id="pNameB" type="text" class="flex-1 h-10 px-3 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-sm" />
+        <select id="pSexB" class="w-24 h-10 px-1 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-xs"><option value="female">♀</option><option value="male">♂</option></select>
+      </div>
+      <div class="flex gap-2">
+        <input id="pDateB" type="date" class="flex-1 h-10 px-3 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-xs" />
+        <select id="pTimeB" class="w-24 h-10 px-1 rounded-lg bg-[#141009]/60 border border-[#cbb454]/25 text-xs"></select>
+      </div>
+    </div>
+
+    <p id="pairErr" class="text-xs text-[#d86b5e] mb-2 hidden"></p>
+    <button id="btnPair" class="w-full h-12 rounded-xl bg-gradient-to-b from-[#d86b5e] to-[#9e2e23] text-[#f2e9d5] font-bold text-base border border-[#e8a8a0]/50 active:scale-[.98] transition" data-i="pair_btn">合 盘 →</button>
+  </div>
+
+  <div id="pairResult" class="hidden space-y-5"></div>
+  <canvas id="pairCanvas" class="hidden"></canvas>
+</main>
+
 <main id="tab-about" class="hidden relative z-10 max-w-[430px] mx-auto px-4 pt-5 pb-28 space-y-5">
   <div class="card-line rounded-2xl border border-[#cbb454]/30 bg-[#221c15]/75 p-6 up">
     <div class="w-11 h-11 seal flex items-center justify-center text-[15px] mx-auto mb-4">天机</div>
@@ -316,6 +354,7 @@
 <nav class="fixed bottom-0 inset-x-0 z-40 border-t border-[#cbb454]/25 bg-[#141009]/92 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
   <div class="max-w-[430px] mx-auto flex">
     <button class="tab flex-1 py-2.5 text-[10px] text-[#e8c874] border-t-2 border-[#c0392b]" data-t="fortune"><span class="block text-base mb-0.5 lg-han">☯</span><span data-i="tab_1">命盘</span></button>
+    <button class="tab flex-1 py-2.5 text-[10px] text-[#6b5d44] border-t-2 border-transparent" data-t="pair"><span class="block text-base mb-0.5 lg-han">合</span><span data-i="tab_pair">合盘</span></button>
     <button class="tab flex-1 py-2.5 text-[10px] text-[#6b5d44] border-t-2 border-transparent" data-t="lot"><span class="block text-base mb-0.5 lg-han">签</span><span data-i="tab_2">求签</span></button>
     <button class="tab flex-1 py-2.5 text-[10px] text-[#6b5d44] border-t-2 border-transparent" data-t="daily"><span class="block text-base mb-0.5 lg-han">历</span><span data-i="tab_3">黄历</span></button>
     <button class="tab flex-1 py-2.5 text-[10px] text-[#6b5d44] border-t-2 border-transparent" data-t="about"><span class="block text-base mb-0.5 lg-han">识</span><span data-i="tab_4">关于</span></button>
@@ -502,12 +541,20 @@ L.s_male=L.m; L.s_female=L.f; L.btn_next=L.next; L.btn_cast=L.tap; L.btn_share=L
 L.tab_1=L.tab1; L.tab_2=L.tab2; L.tab_3=L.tab3; L.tab_4=L.tab4; L.btn_lot=L.lot_btn;
 L.al_yi=L.al_do; L.al_ji=L.al_avoid; L.al_dir=L.al_wealth; L.al_week=L.al_cycle; L.about_body=L.about_p;
 
+L.pair_title={zh:"合婚合盘",en:"Duo Reading",th:"ดูสมพงษ์",id:"Kecocokan",vi:"Hợp duyên",ms:"Kecocokan"};
+L.pair_sub={zh:"两人各报生辰，看合力在哪里、卡点在哪里。",en:"Two births, two charts — where you pull together, where you snag.",th:"สองวันเกิด ดูจุดที่ไปด้วยกันและจุดที่ติด",id:"Dua kelahiran — di mana cocok dan di mana tersangkut.",vi:"Hai ngày sinh — chỗ hợp và chỗ vướng.",ms:"Dua kelahiran — di mana serasi, di mana tersekat."};
+L.pair_a={zh:"甲方",en:"Person A",th:"ฝ่ายเอ",id:"Orang A",vi:"Bên A",ms:"Orang A"};
+L.pair_b={zh:"乙方",en:"Person B",th:"ฝ่ายบี",id:"Orang B",vi:"Bên B",ms:"Orang B"};
+L.pair_btn={zh:"合 盘 →",en:"READ THE PAIR →",th:"อ่านคู่ →",id:"BACA PASANGAN →",vi:"LUẬN CẶP →",ms:"BACA PASANGAN →"};
+L.tab_pair={zh:"合盘",en:"Duo",th:"คู่",id:"Pasangan",vi:"Cặp",ms:"Pasangan"};
+
 function t(k){ const e=L[k]; return (e && (e[S.lang] || e.en || e.zh)) || k; }
 
 /* ===== STATE ===== */
 const S = { lang:"zh", tab:"fortune", gender:null, tapCount:0, lotTaps:0, lotDrawn:false, revealed:[false,false,false], seed:0, usedDate:"", result:null };
 
 /* ===== UTILS ===== */
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 function sr(seed){ let s=(seed>>>0)||1; return function(){ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
 function pick(a,r){ return a[Math.floor(r()*a.length)%a.length]; }
 function pickN(arr,n,r){ const c=arr.slice(); const out=[]; for(let i=0;i<n&&c.length;i++){ out.push(c.splice(Math.floor(r()*c.length)%c.length,1)[0]); } return out; }
@@ -838,7 +885,7 @@ function resetAll(){
 
 function switchTab(tab){
   S.tab=tab;
-  const map={fortune:"tab-fortune",lot:"tab-lot",daily:"tab-daily",about:"tab-about"};
+  const map={fortune:"tab-fortune",pair:"tab-pair",lot:"tab-lot",daily:"tab-daily",about:"tab-about"};
   Object.keys(map).forEach(k=>{
     const el=$(map[k]);
     if(!el) return;
@@ -1032,6 +1079,296 @@ function makeShare(){
   $("shareDownload").href=url;
   box.scrollIntoView({behavior:"smooth",block:"center"});
 }
+
+/* ================= 合盘 ================= */
+const LIUHE=[[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+const LIUCHONG=[[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
+const SANHE=[[8,0,4],[11,3,7],[2,6,10],[5,9,1]];
+const XING=[[2,5],[5,8],[8,2],[1,10],[10,7],[7,1]];
+
+function yBranch(y){ return ((y-4)%12+12)%12; }
+function dBranch(y,m,d){
+  const base=Date.UTC(1900,0,31), tgt=Date.UTC(y,m-1,d);
+  let diff=Math.round((tgt-base)/86400000);
+  diff=((diff+40)%60+60)%60;
+  return diff%12;
+}
+function inPairs(list,a,b){
+  for(let i=0;i<list.length;i++){ if((list[i][0]===a&&list[i][1]===b)||(list[i][0]===b&&list[i][1]===a)) return true; }
+  return false;
+}
+function inTriple(group,a,b){
+  for(let i=0;i<group.length;i++){
+    const g=group[i];
+    if(g.indexOf(a)>=0 && g.indexOf(b)>=0 && a!==b) return true;
+  }
+  return false;
+}
+const WX_ORDER=["wood","fire","earth","metal","water"]; // 相生顺序
+function wxKey(y){
+  const st=((y-4)%10+10)%10;
+  return ["metal","wood","water","fire","earth"][EMAP[st]];
+}
+function wxRelation(a,b){
+  if(a===b) return "same";
+  const ia=WX_ORDER.indexOf(a), ib=WX_ORDER.indexOf(b);
+  if((ia+1)%5===ib) return "generates";   // a生b
+  if((ib+1)%5===ia) return "generated";   // b生a
+  return "controls";                       // 相克
+}
+const SIGN_ELEM={aries:"fire",leo:"fire",sag:"fire",taurus:"earth",virgo:"earth",cap:"earth",
+  gemini:"air",libra:"air",aqu:"air",cancer:"water",scorpio:"water",pis:"water"};
+const ELEM_CYCLE=["fire","earth","metal","water","air"]; // 简化生序，仅用于判断相生
+function signRel(a,b){
+  if(a===b) return "same";
+  const ia=ELEM_CYCLE.indexOf(a), ib=ELEM_CYCLE.indexOf(b);
+  if((ia+1)%5===ib || (ib+1)%5===ia) return "supports";
+  return "clashes";
+}
+
+function computePair(A,B){
+  const ya=yBranch(A.year), yb=yBranch(B.year);
+  const da=dBranch(A.year,A.month,A.day), db=dBranch(B.year,B.month,B.day);
+  const wa=wxKey(A.year), wb=wxKey(B.year);
+  const za=SIGN_ELEM[zodiac(A.month,A.day).k], zb=SIGN_ELEM[zodiac(B.month,B.day).k];
+
+  const yRel = inPairs(LIUHE,ya,yb) ? "liuhe" : inPairs(LIUCHONG,ya,yb) ? "chong"
+            : inTriple(SANHE,ya,yb) ? "sanhe" : inPairs(XING,ya,yb) ? "xing" : "plain";
+  const dRel = inPairs(LIUHE,da,db) ? "liuhe" : inPairs(LIUCHONG,da,db) ? "chong"
+            : inTriple(SANHE,da,db) ? "sanhe" : inPairs(XING,da,db) ? "xing" : "plain";
+  const wRel = wxRelation(wa,wb);
+  const zRel = signRel(za,zb);
+
+  let harmony = 60, tempo = 58, friction = 50;
+  if(yRel==="liuhe"){ harmony+=10; tempo+=4; friction-=8; }
+  if(yRel==="sanhe"){ harmony+=8; tempo+=5; friction-=5; }
+  if(yRel==="xing"){ harmony-=6; friction+=9; }
+  if(yRel==="chong"){ harmony-=4; friction+=12; tempo-=6; }
+  if(dRel==="liuhe"){ harmony+=12; friction-=10; }
+  if(dRel==="sanhe"){ harmony+=8; friction-=6; }
+  if(dRel==="xing"){ harmony-=8; friction+=11; }
+  if(dRel==="chong"){ harmony-=6; friction+=14; tempo-=8; }
+
+  if(wRel==="generates"||wRel==="generated"){ harmony+=6; tempo+=4; }
+  else if(wRel==="same"){ tempo+=6; harmony+=2; }
+  else { friction+=7; harmony-=3; }
+
+  if(zRel==="same"){ tempo+=8; harmony+=3; }
+  else if(zRel==="supports"){ tempo+=5; harmony+=4; }
+  else { friction+=6; tempo-=4; }
+
+  harmony=clamp(harmony,28,98); tempo=clamp(tempo,28,98); friction=clamp(friction,18,96);
+  const total=clamp(Math.round((harmony*0.42 + (100-friction)*0.33 + tempo*0.25)),32,97);
+  return { total:total, harmony:harmony, tempo:tempo, friction:friction,
+           yRel:yRel, dRel:dRel, wRel:wRel, zRel:zRel,
+           wa:wa, wb:wb, za:za, zb:zb, ya:ya, yb:yb };
+}
+
+const PAIR_TXT={
+ zh:{
+  liuhe:"生肖相合，属于那种不用多说也能对上频的组合。",
+  sanhe:"同属一个三合局，做事的方式天然接近。",
+  xing:"带刑，容易在同一个点上反复磨，话赶话最容易起火。",
+  chong:"相冲，节奏差异明显，好事也容易撞在同一天互相消耗。",
+  plain:"不强合也不冲，全靠后天怎么处。",
+  same:"同元素，默契来得快，但也容易一起固执。",
+  supports:"元素互生，一方累的时候另一方接得住。",
+  clashes:"元素相克，短期吸引、长期需要让位。",
+  generates:"五行相生，一方推着另一方往前走。",
+  generated:"五行相生，反过来也成立，谁状态好谁带节奏。",
+  neutral:"五行不冲不生，平平，看具体怎么经营。"
+ },
+ en:{
+  liuhe:"Your animal signs are a paired set — you sync without explaining.",
+  sanhe:"You share a triple-harmony group; your defaults are similar.",
+  xing:"A punishing pair: you grind on the same point, and words escalate fast.",
+  chong:"A clashing pair: different tempos, good things burn each other out on the same day.",
+  plain:"Neither bonded nor clashing — it rests on how you handle each other.",
+  same:"Same element: fast rapport, but you can be stubborn together.",
+  supports:"Elements feed each other — when one tires, the other holds.",
+  clashes:"Elements oppose: strong pull short-term, needs yielding long-term.",
+  generates:"One element drives the other forward.",
+  generated:"The other direction holds too — whoever is stronger sets the tempo.",
+  neutral:"No strong push either way; it depends on how you run it."
+ }
+};
+
+function pairAdvice(P,A,B){
+  const zh=S.lang==="zh";
+  const t1 = PAIR_TXT[zh?"zh":"en"][P.yRel];
+  const t2 = PAIR_TXT[zh?"zh":"en"][P.wRel==="generates"?"generates":P.wRel==="generated"?"generated":P.wRel==="same"?"same":"neutral"];
+  const t3 = PAIR_TXT[zh?"zh":"en"][P.zRel==="same"?"same":P.zRel==="supports"?"supports":"clashes"];
+  const out=[];
+  if(zh){
+    out.push(t1);
+    out.push(P.friction>=70 ? "冲突分偏高。真正要改的不是脾气，是吵架的时机：别在晚上十点后讨论任何重要的事。" :
+             P.friction>=50 ? "冲突在中等水位。你们不是不能吵，是吵完需要有人先递台阶，别让台阶等太久。" :
+             "冲突分低，你们不太容易正面起火，但小心把不满憋成沉默。");
+    if(P.harmony>=75) out.push("默契是你们的底牌：一个眼神能省掉半小时解释，别浪费在猜疑上。");
+    else if(P.harmony>=55) out.push("默契中等，靠的是把话说完整，而不是指望对方猜到。");
+    else out.push("默契不高，不要用“你懂我”来试探对方，直接讲需求反而更稳。");
+    if(P.tempo>=70) out.push("节奏合拍，适合一起做需要长期投入的事，比如攒钱或者一起健身。");
+    else if(P.tempo>=50) out.push("节奏略有差，一个想快一个想稳，把时间表摊开写清楚，比争论谁对更管用。");
+    else out.push("节奏差异明显：不是谁拖谁，是你们对“什么时候该动”的判断不同，提前约定节点。");
+    out.push(t2); out.push(t3);
+  }else{
+    out.push(t1);
+    out.push(P.friction>=70 ? "Friction runs high. What needs changing is not temperament but timing: never discuss anything important after 10pm." :
+             P.friction>=50 ? "Friction sits mid-range. You can argue — someone just has to offer the step down first, and not too late." :
+             "Low friction: you rarely collide head-on, but watch for resentment turning into silence.");
+    if(P.harmony>=75) out.push("Rapport is your strongest card — a glance saves half an hour of explaining. Don’t spend it on suspicion.");
+    else if(P.harmony>=55) out.push("Mid rapport: finish your sentences instead of expecting them to be guessed.");
+    else out.push("Rapport is thin. Don’t test them with “you should know”; state the need plainly.");
+    if(P.tempo>=70) out.push("Tempo matches — good for long-haul things: saving, training, building something.");
+    else if(P.tempo>=50) out.push("Slight tempo gap: one wants speed, one wants footing. Put the schedule on paper instead of arguing who is right.");
+    else out.push("Clear tempo gap: neither is dragging — you disagree on when to move. Agree checkpoints in advance.");
+    out.push(t2); out.push(t3);
+  }
+  return out;
+}
+
+
+/* ================= 合盘：渲染 ================= */
+function pz(zh,en){ return S.lang==="zh" ? zh : en; }
+
+function ringSVG(pct){
+  const R=58, C=2*Math.PI*R;
+  const off=C*(1-pct/100);
+  return '<svg viewBox="0 0 140 140" class="w-36 h-36">'+
+    '<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="rgba(203,180,84,0.18)" stroke-width="8"/>'+
+    '<circle cx="70" cy="70" r="'+R+'" fill="none" stroke="#e8c874" stroke-width="8" stroke-linecap="round" '+
+    'stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 70 70)"/>'+
+    '<text x="70" y="76" text-anchor="middle" fill="#e8c874" font-size="34" font-family="serif" font-weight="bold">'+pct+'</text>'+
+    '<text x="70" y="98" text-anchor="middle" fill="rgba(170,156,128,0.9)" font-size="11" font-family="sans-serif">MATCH</text>'+
+    '</svg>';
+}
+
+function bar(label,val,color){
+  return '<div class="mb-2.5">'+
+    '<div class="flex justify-between text-[11px] mb-1"><span class="text-[#aa9c80]">'+label+'</span><span class="text-[#e8c874]">'+val+'</span></div>'+
+    '<div class="h-1.5 rounded-full bg-[#cbb454]/15"><div class="h-1.5 rounded-full" style="width:'+val+'%;background:'+color+'"></div></div>'+
+  '</div>';
+}
+
+function doPair(){
+  const err=$("pairErr");
+  const da=$("pDateA").value, db=$("pDateB").value;
+  if(!da || !db){ err.textContent=pz("两边的生日都要填。","Both birth dates are needed."); err.classList.remove("hidden"); return; }
+  err.classList.add("hidden");
+  const pa=da.split("-").map(Number), pb=db.split("-").map(Number);
+  const A={ name:$("pNameA").value.replace(/^\s+|\s+$/g,"")||pz("甲方","A"), year:pa[0], month:pa[1], day:pa[2], hour:parseInt($("pTimeA").value||"12",10) };
+  const B={ name:$("pNameB").value.replace(/^\s+|\s+$/g,"")||pz("乙方","B"), year:pb[0], month:pb[1], day:pb[2], hour:parseInt($("pTimeB").value||"12",10) };
+  const P=computePair(A,B);
+  const tips=pairAdvice(P,A,B);
+
+  const box=$("pairResult");
+  box.classList.remove("hidden");
+
+  const relTag={ liuhe:pz("六合","Paired"), sanhe:pz("三合","Triple harmony"), chong:pz("相冲","Clash"), xing:pz("相刑","Punishing"), plain:pz("平和","Neutral") }[P.yRel];
+  const anA=animal(A.year), anB=animal(B.year);
+  const zA=zodiac(A.month,A.day), zB=zodiac(B.month,B.day);
+  const elA=element(A.year), elB=element(B.year);
+
+  box.innerHTML =
+    '<div class="card-line rounded-2xl border border-[#cbb454]/35 bg-[#221c15]/75 p-5 text-center up">'+
+      '<p class="text-[10px] tracking-[.3em] text-[#cbb454]/80">'+pz("双人合盘","DUO READING")+'</p>'+
+      '<div class="my-2 flex justify-center">'+ringSVG(P.total)+'</div>'+
+      '<p class="lg-han text-lg text-[#e9dcc0]">'+A.name+' <span class="text-[#c0392b]">×</span> '+B.name+'</p>'+
+      '<p class="text-[11px] text-[#aa9c80] mt-1">'+relTag+' · '+tr(zA.n)+' / '+tr(zB.n)+'</p>'+
+    '</div>'+
+    '<div class="card-line rounded-2xl border border-[#cbb454]/30 bg-[#221c15]/75 p-5 up">'+
+      '<h3 class="lg-han text-base text-[#e8c874] mb-3">'+pz("三处水位","THREE GAUGES")+'</h3>'+
+      bar(pz("默契","RAPPORT"), P.harmony, "linear-gradient(90deg,#9dbaa4,#e8c874)")+
+      bar(pz("节奏","TEMPO"), P.tempo, "linear-gradient(90deg,#e8c874,#d86b5e)")+
+      bar(pz("冲突倾向","FRICTION"), P.friction, "linear-gradient(90deg,#d86b5e,#c0392b)")+
+      '<p class="text-[10px] text-[#6b5d44] mt-1">'+pz("冲突条越高，越要在说话方式上留余地。","A higher friction bar means more room is needed in how you speak.")+'</p>'+
+    '</div>'+
+    '<div class="card-line rounded-2xl border border-[#cbb454]/30 bg-[#f2e9d5] text-[#221c15] p-5 up">'+
+      '<h3 class="lg-han text-base font-extrabold mb-3">'+pz("两人对照","SIDE BY SIDE")+'</h3>'+
+      '<div class="grid grid-cols-3 gap-2 text-center text-[11px]">'+
+        '<div class="text-[#6b5d44]"></div><div class="font-bold text-[#c0392b] truncate">'+A.name+'</div><div class="font-bold text-[#527560] truncate">'+B.name+'</div>'+
+        '<div class="text-[#6b5d44] text-left">'+pz("生肖","Animal")+'</div><div class="lg-han">'+(anA[LIDX[S.lang]]||anA[1])+'</div><div class="lg-han">'+(anB[LIDX[S.lang]]||anB[1])+'</div>'+
+        '<div class="text-[#6b5d44] text-left">'+pz("五行","Element")+'</div><div class="lg-han">'+(elA[LIDX[S.lang]]||elA[1])+'</div><div class="lg-han">'+(elB[LIDX[S.lang]]||elB[1])+'</div>'+
+        '<div class="text-[#6b5d44] text-left">'+pz("星座","Sign")+'</div><div class="lg-han truncate">'+tr(zA.n)+'</div><div class="lg-han truncate">'+tr(zB.n)+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="card-line rounded-2xl border border-[#cbb454]/30 bg-[#221c15]/75 p-5 up">'+
+      '<h3 class="lg-han text-base text-[#e8c874] mb-3">'+pz("怎么处","HOW TO RUN IT")+'</h3>'+
+      '<ul class="space-y-3 text-[13px] leading-relaxed text-[#e9dcc0]">'+
+        tips.map(function(s,i){ return '<li class="flex gap-2"><span class="text-[#c0392b] shrink-0">'+(i+1)+'</span><span>'+s+'</span></li>'; }).join("")+
+      '</ul>'+
+    '</div>'+
+    '<div class="card-line rounded-2xl border border-[#cbb454]/25 bg-[#221c15]/60 p-4 text-center up">'+
+      '<p class="text-[11px] text-[#6b5d44]">'+pz("分数只是两人相处的一个切面，不是结论。","A score is one slice of how two people meet — not a verdict.")+'</p>'+
+    '</div>'+
+    '<div class="flex gap-3">'+
+      '<button id="btnPairShare" class="flex-1 h-12 rounded-xl border border-[#cbb454]/45 bg-[#cbb454]/10 text-[#e8c874] text-sm font-bold">'+pz("生成合盘图","Save Pair Chart")+'</button>'+
+      '<button id="btnPairAgain" class="flex-1 h-12 rounded-xl border border-[#c0392b]/50 bg-[#c0392b]/10 text-[#d86b5e] text-sm font-bold">'+pz("换人再算 ↺","Again ↺")+'</button>'+
+    '</div>'+
+    '<div id="pairShareBox" class="hidden card-line rounded-2xl border border-[#cbb454]/30 bg-[#221c15]/75 p-3">'+
+      '<div id="pairSharePreview" class="rounded-lg overflow-hidden"></div>'+
+      '<a id="pairDownload" class="mt-2 block text-center text-xs text-[#e8c874] underline" download="tianji-pair.png">'+pz("下载合盘图","Download")+'</a>'+
+    '</div>';
+
+  $("btnPairShare").addEventListener("click", function(){ makePairShare(A,B,P); });
+  $("btnPairAgain").addEventListener("click", function(){
+    box.classList.add("hidden"); box.innerHTML="";
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+  box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function makePairShare(A,B,P){
+  const cv=$("pairCanvas"), W=750, H=1100, M=60;
+  cv.width=W; cv.height=H;
+  const x=cv.getContext("2d");
+  x.fillStyle="#141009"; x.fillRect(0,0,W,H);
+  const g=x.createRadialGradient(W*0.3,0,0,W*0.3,0,W);
+  g.addColorStop(0,"rgba(203,180,84,0.16)"); g.addColorStop(1,"rgba(20,16,9,0)");
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.strokeStyle="rgba(203,180,84,0.5)"; x.lineWidth=2; x.strokeRect(26,26,W-52,H-52);
+  x.strokeStyle="rgba(192,57,43,0.45)"; x.lineWidth=1.5; x.strokeRect(36,36,W-72,H-72);
+
+  x.fillStyle="#c0392b"; x.fillRect(W-152,64,72,72);
+  x.fillStyle="#f2e9d5"; x.font="bold 24px serif"; x.textAlign="center";
+  x.fillText("天",W-116,98); x.fillText("机",W-116,130); x.textAlign="left";
+
+  x.fillStyle="rgba(203,180,84,0.85)"; x.font="20px serif";
+  x.fillText("TIAN JI · DUO READING", M, 100);
+
+  x.fillStyle="#e8c874"; x.font="bold 46px serif";
+  x.fillText(A.name+" × "+B.name, M, 175);
+
+  x.fillStyle="#f2e9d5"; x.font="bold 130px serif";
+  x.fillText(String(P.total), M, 320);
+  x.fillStyle="rgba(170,156,128,0.9)"; x.font="22px serif";
+  x.fillText("MATCH", M+ (String(P.total).length*72), 318);
+
+  const rows=[[pz("默契","RAPPORT"),P.harmony],[pz("节奏","TEMPO"),P.tempo],[pz("冲突","FRICTION"),P.friction]];
+  let y=400;
+  rows.forEach(function(r){
+    x.fillStyle="rgba(170,156,128,0.95)"; x.font="22px serif"; x.fillText(r[0], M, y);
+    x.fillStyle="#e8c874"; x.font="bold 22px serif"; x.textAlign="right"; x.fillText(String(r[1]), W-M, y); x.textAlign="left";
+    x.fillStyle="rgba(203,180,84,0.18)"; x.fillRect(M, y+12, W-M*2, 10);
+    x.fillStyle="#e8c874"; x.fillRect(M, y+12, (W-M*2)*r[1]/100, 10);
+    y+=70;
+  });
+
+  x.fillStyle="rgba(232,168,160,0.95)"; x.font="22px serif";
+  const tips=pairAdvice(P,A,B).slice(0,2);
+  let yy=y+18;
+  tips.forEach(function(t){ yy = wrap(x, "· "+t, M, yy, W-M*2, 34)+14; });
+
+  x.fillStyle="rgba(170,156,128,0.75)"; x.font="17px serif";
+  x.fillText(pz("算法推演 · 仅供静思","algorithmic · for reflection"), M, H-64);
+
+  const url=cv.toDataURL("image/png");
+  $("pairShareBox").classList.remove("hidden");
+  $("pairSharePreview").innerHTML='<img src="'+url+'" style="width:100%;display:block;border-radius:6px" alt="pair chart" />';
+  $("pairDownload").href=url;
+  $("pairShareBox").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
 /* ===== EVENTS / INIT ===== */
 function init(){
   // 语言
@@ -1060,6 +1397,13 @@ function init(){
   $("btnCast").addEventListener("click", tapCast);
   $("btnAgain").addEventListener("click", resetAll);
   $("btnShare").addEventListener("click", makeShare);
+  $("btnPair").addEventListener("click", doPair);
+  ["pTimeA","pTimeB"].forEach(function(id){
+    var sel=$(id); if(!sel) return;
+    sel.innerHTML="";
+    var o0=document.createElement("option"); o0.value=""; o0.textContent="--:--"; sel.appendChild(o0);
+    for(var h=0;h<24;h++){ var o=document.createElement("option"); o.value=String(h); o.textContent=pad2(h)+":00"; sel.appendChild(o); }
+  });
   $("btnLot").addEventListener("click", tapLot);
   $("lotTube").addEventListener("click", tapLot);
   const tabs=document.querySelectorAll(".tab");
