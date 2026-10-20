@@ -46,6 +46,20 @@
   .shake{ animation:shake .55s ease-in-out; }
   @keyframes slideIn { from{ opacity:0; transform:translateY(-6px) } to{ opacity:1; transform:translateY(0) } }
   .slideIn{ animation:slideIn .35s ease-out both; }
+  /* 签掉落 */
+  .stick{ position:absolute; left:50%; bottom:0; width:9px; height:46px; margin-left:-4.5px;
+    background:linear-gradient(180deg,#f2dead,#cbb454 55%,#a8862f); border-radius:2px;
+    box-shadow:0 3px 8px rgba(0,0,0,.45); transform-origin:50% 100%;
+    animation:stickOut .9s cubic-bezier(.22,.9,.28,1) forwards; }
+  .stick span{ display:block; width:100%; height:100%; text-align:center; line-height:46px;
+    font-family:'STSong','Songti SC','Noto Serif SC',serif; font-size:9px; color:#5a3d12; }
+  @keyframes stickOut{
+    0%{ transform:translate(0,30px) rotate(0deg) scaleY(.45); opacity:0 }
+    30%{ transform:translate(calc(var(--dx) * 0.15), -52px) rotate(-7deg) scaleY(1); opacity:1 }
+    58%{ transform:translate(calc(var(--dx) * 0.55), -18px) rotate(7deg) }
+    82%{ transform:translate(var(--dx), 3px) rotate(var(--rot)) }
+    100%{ transform:translate(var(--dx), 0) rotate(var(--rot)); opacity:1 }
+  }
   input,select{ color-scheme:dark; }
   input[type="date"]::-webkit-calendar-picker-indicator{ filter:invert(.65); cursor:pointer; }
   .noscroll{ overflow:hidden; }
@@ -245,8 +259,12 @@
   <div class="card-line rounded-2xl border border-[#cbb454]/30 bg-[#221c15]/75 p-6 text-center up">
     <h3 class="lg-han text-xl gold-text" data-i="lot_title">灵签问事</h3>
     <p class="text-[12px] text-[#aa9c80] mt-1 mb-5" data-i="lot_sub">心中默念所问之事，轻叩签筒三下</p>
-    <div id="lotTube" class="mx-auto w-16 h-28 rounded-sm bg-gradient-to-b from-[#524538] to-[#3b3023] border border-[#cbb454]/45 glow flex items-end justify-center overflow-hidden">
-      <span class="lg-han text-[#e8c874] text-xl mb-2">签</span>
+    <div id="lotStage" class="relative mx-auto w-full h-52 mb-1">
+      <div id="lotSticks" class="absolute inset-0 pointer-events-none"></div>
+      <div id="lotTube" class="absolute left-1/2 -translate-x-1/2 bottom-8 w-16 h-28 rounded-sm bg-gradient-to-b from-[#524538] to-[#3b3023] border border-[#cbb454]/45 glow flex items-end justify-center overflow-hidden cursor-pointer active:scale-[.98] transition">
+        <span class="lg-han text-[#e8c874] text-xl mb-2">签</span>
+      </div>
+      <div class="absolute left-1/2 -translate-x-1/2 bottom-6 w-44 h-px bg-[#cbb454]/30"></div>
     </div>
     <p id="lotCnt" class="text-[11px] text-[#aa9c80] mt-3 h-4"></p>
     <button id="btnLot" class="mt-3 w-full h-12 rounded-xl border border-[#cbb454]/50 bg-[#cbb454]/10 text-[#e8c874] font-bold" data-i="btn_lot">轻叩签筒</button>
@@ -366,6 +384,16 @@ const JI = [
  {zh:"在群里炫耀刚做成的事", en:"Bragging about a recent win", th:"โอ้อวดสิ่งที่ทำได้", id:"Menyombong hasil baru", vi:"Khoe thành tích mới", ms:"Menunjuk hasil baru", why:{zh:"满则溢，今天的运走这个口",en:"Fullness spills; luck leaves by this door"}},
  {zh:"临时改计划", en:"Changing the plan last-minute", th:"เปลี่ยนแผนกะทันหัน", id:"Mengubah rencana mendadak", vi:"Đổi kế hoạch phút chót", ms:"Menukar rancangan saat akhir", why:{zh:"今天改一次，乱三天",en:"One change today costs three days"}}
 ];
+
+/* 求签：五签，长短由心 */
+const LOTS = [
+ {grade:"上上签", ctx:"问事 · 求成", txt:{zh:"时来运转，谋望皆成。",en:"The tide turns; what you aim at comes to pass.",th:"เวลาเปลี่ยน สิ่งที่หวังสำเร็จ",id:"Waktu berputar; yang diniatkan tercapai.",vi:"Thời vận xoay, điều cầu thành.",ms:"Masa berubah; hasrat tercapai."}},
+ {grade:"上签", ctx:"问事 · 求路", txt:{zh:"先难后获，耐心有功。",en:"Hard first, then the yield — patience pays.",th:"ยากก่อน ได้ผลทีหลัง",id:"Sulit dulu, hasil kemudian.",vi:"Khó trước, thành sau.",ms:"Sukar dulu, hasil kemudian."}},
+ {grade:"上签", ctx:"问事 · 求财", txt:{zh:"小利在外，收心在内。",en:"Small gains lie outside; keep the centre calm.",th:"กำไรเล็กอยู่นอกใจ",id:"Untung kecil di luar; jaga batin.",vi:"Lợi nhỏ ở ngoài; giữ tâm tĩnh.",ms:"Untung kecil di luar; jaga hati."}},
+ {grade:"中签", ctx:"问事 · 求情", txt:{zh:"守旧则吉，妄动生悔。",en:"Hold what you have; rash moves breed regret.",th:"รักษาสิ่งมี อย่าขยับมั่ว",id:"Pegang yang ada; gegabah menyesal.",vi:"Giữ cái đang có; vội vàng sinh hối.",ms:"Pegang yang ada; gopoh menyesal."}},
+ {grade:"下签", ctx:"问事 · 求解", txt:{zh:"暂时阻滞，退以自安。",en:"Blocked for now — retreat restores peace.",th:"ติดขัดชั่วคราว ถอยเพื่อสงบ",id:"Terhambat sementara; mundur menenangkan.",vi:"Tắc tạm thời; lui để an.",ms:"Terhalang sementara; undur menenangkan."}}
+];
+
 const YEARS_LINE = {
  zh:"{y}年生，{a}命，{e}为本命五行。",
  en:"Born {y} — {a} year, {e} as your base element."
@@ -446,6 +474,7 @@ const L = {
  tab4:{zh:"关于",en:"About",th:"เกี่ยวกับ",id:"Tentang",vi:"Giới thiệu",ms:"Tentang"},
  lot_title:{zh:"灵签问事",en:"Ask the Sticks",th:"ถามเซียมซี",id:"Tanya kuas",vi:"Hỏi xăm",ms:"Tanya kuat"},
  lot_sub:{zh:"心里只想一件事，轻叩签筒三下",en:"Hold one question in mind. Knock three times.",th:"คิดเรื่องเดียว เคาะสามครั้ง",id:"Pegang satu soalan. Ketuk tiga kali.",vi:"Giữ một câu hỏi. Gõ ba lần.",ms:"Pegang satu soalan. Ketuk tiga kali."},
+ lot_drawing:{zh:"成签…",en:"Drawing…",th:"กำลังเสี่ยง…",id:"Menarik…",vi:"Đang gieo…",ms:"Sedang menarik…"},
  lot_btn:{zh:"轻叩签筒",en:"Knock the Tube",th:"เคาะกระบอก",id:"Ketuk tabung",vi:"Gõ ống",ms:"Ketuk tiub"},
  lot_again:{zh:"再问一签 ↺",en:"Draw Another ↺",th:"ถามอีก ↺",id:"Tanya lagi ↺",vi:"Hỏi tiếp ↺",ms:"Tanya lagi ↺"},
  lot_wait:{zh:"静心，再叩两下",en:"Steady. Two more taps."},
@@ -476,7 +505,7 @@ L.al_yi=L.al_do; L.al_ji=L.al_avoid; L.al_dir=L.al_wealth; L.al_week=L.al_cycle;
 function t(k){ const e=L[k]; return (e && (e[S.lang] || e.en || e.zh)) || k; }
 
 /* ===== STATE ===== */
-const S = { lang:"zh", tab:"fortune", gender:null, tapCount:0, lotTaps:0, revealed:[false,false,false], seed:0, usedDate:"", result:null };
+const S = { lang:"zh", tab:"fortune", gender:null, tapCount:0, lotTaps:0, lotDrawn:false, revealed:[false,false,false], seed:0, usedDate:"", result:null };
 
 /* ===== UTILS ===== */
 function sr(seed){ let s=(seed>>>0)||1; return function(){ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
@@ -571,6 +600,7 @@ function renderI18n(){
   for(let h=0;h<24;h++){ const o=document.createElement("option"); o.value=String(h); o.textContent=pad2(h)+":00"; sel.appendChild(o); }
   sel.value=prev;
   $("curLang").textContent=LANGNAME[S.lang];
+  var lb=$("btnLot"); if(lb && !lb.disabled) lb.textContent = S.lotDrawn ? t("lot_again") : t("lot_btn");
 }
 
 function setStep(n){
@@ -824,19 +854,42 @@ function switchTab(tab){
 }
 
 /* 求签 */
+function dropStick(n){
+  const host=$("lotSticks");
+  const el=document.createElement("div");
+  el.className="stick";
+  const dir = (n % 2 === 0) ? 1 : -1;
+  const dx = dir * (24 + Math.random()*40);
+  const rot = dir * (10 + Math.random()*18);
+  el.style.setProperty("--dx", dx.toFixed(1)+"px");
+  el.style.setProperty("--rot", rot.toFixed(1)+"deg");
+  el.style.zIndex = String(20+n);
+  el.innerHTML="<span>签</span>";
+  host.appendChild(el);
+}
+
 function tapLot(){
+  if(S.lotDrawn){ resetLot(); return; }
+  if(S.lotTaps>=3) return;
   S.lotTaps++;
   const tube=$("lotTube");
-  tube.classList.remove("shake"); void tube.offsetWidth; tube.classList.add("shake");
+  tube.classList.remove("shake");
+  void tube.offsetWidth;
+  tube.classList.add("shake");
+  dropStick(S.lotTaps);
   $("lotCnt").textContent = S.lotTaps + " / 3";
   if(S.lotTaps>=3){
-    $("btnLot").disabled=true;
-    setTimeout(drawLot,650);
+    $("btnLot").disabled = true;
+    $("btnLot").textContent = t("lot_drawing");
+    setTimeout(drawLot, 900);
   }
 }
+
 function drawLot(){
+  if(S.lotDrawn) return;
+  S.lotDrawn = true;
   const d=new Date();
-  const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate() + S.lotTaps*7;
+  const seed = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate() + 3*7;
   const r=sr(seed);
   const lot=pick(LOTS,r);
   const box=$("lotRes");
@@ -846,12 +899,20 @@ function drawLot(){
     '<p class="lg-han text-3xl font-extrabold gold-text mt-2">'+lot.grade+'</p></div>'+
     '<div class="rounded-xl border border-[#cbb454]/30 bg-[#141009]/50 p-4 text-center">'+
     '<p class="lg-han text-[15px] leading-relaxed text-[#e9dcc0]">'+(lot.txt[S.lang]||lot.txt.en)+'</p></div>'+
-    '<p class="text-[11px] text-[#aa9c80] mt-3 text-center">'+(S.lang==="zh"?"签已出。所问之事，答案不在签上，在你接下来做的那一步。":"The stick is drawn. The answer is in your next step, not on paper.")+'</p>'+
-    '<button id="lotAgain" class="mt-4 w-full h-11 rounded-xl border border-[#cbb454]/40 text-[#e8c874] text-sm">'+t("lot_again")+'</button>';
-  $("lotCnt").textContent="";
+    '<p class="text-[11px] text-[#aa9c80] mt-3 text-center">'+(S.lang==="zh"?"签已出。答案不在签上，在你接下来做的那一步。":"The stick is out. The answer is in your next step.")+'</p>';
   $("btnLot").disabled=false;
-  const again=$("lotAgain");
-  if(again) again.addEventListener("click", function(){ S.lotTaps=0; box.classList.add("hidden"); box.innerHTML=""; $("lotCnt").textContent=""; });
+  $("btnLot").textContent=t("lot_again");
+}
+
+function resetLot(){
+  S.lotTaps=0;
+  S.lotDrawn=false;
+  $("lotSticks").innerHTML="";
+  const box=$("lotRes");
+  box.classList.add("hidden");
+  box.innerHTML="";
+  $("lotCnt").textContent="";
+  $("btnLot").textContent=t("lot_btn");
 }
 
 /* 黄历 */
@@ -1000,6 +1061,7 @@ function init(){
   $("btnAgain").addEventListener("click", resetAll);
   $("btnShare").addEventListener("click", makeShare);
   $("btnLot").addEventListener("click", tapLot);
+  $("lotTube").addEventListener("click", tapLot);
   const tabs=document.querySelectorAll(".tab");
   for(let i=0;i<tabs.length;i++) tabs[i].addEventListener("click", function(){ switchTab(tabs[i].getAttribute("data-t")); });
 
